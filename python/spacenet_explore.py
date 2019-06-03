@@ -12,6 +12,7 @@ import shutil
 import glob
 import sys
 import os
+import shutil
 
 ####################
 ####################
@@ -25,21 +26,22 @@ import os
 #from spaceNet import geoTools as gT
 
 spacenet_explore_dir = os.path.dirname(os.path.realpath(__file__))
-output_dir = "/media/hdd/Data/AWS/AOI 1 - Rio de Janeiro/processedBuildingLabels/output/"
 sys.path.extend([spacenet_explore_dir])
 import geojson_to_pixel_arr, create_dist_map, create_building_mask, \
         plot_truth_coords, plot_building_mask, plot_dist_transform, \
         plot_all_transforms
+
+output_dir = "/media/hdd/Data/AWS/AOI 1 - Rio de Janeiro/processedBuildingLabels/output/"
+if os.path.exists(output_dir):
+    shutil.rmtree(output_dir)
+    os.makedirs(output_dir)
 
 # set path to spacenet data
 # acquire from: https://aws.amazon.com/public-datasets/spacenet/    
 spacenet_data_dir = '/media/hdd/Data/AWS/AOI 1 - Rio de Janeiro/processedBuildingLabels/'
   
 # get N images in 3band data
-N_ims = 10
-  
-####################
-####################
+N_ims = 3
     
 ###############################################################################
 def main():   
@@ -66,6 +68,7 @@ def main():
     #
     # all_demo_dir = spacenet_explore_dir + '/all_demo/'
 
+    os.makedirs(imDir_out)
     coords_demo_dir = output_dir + '/pixel_coords_demo/'
 
     maskDir = output_dir + '/building_mask/'
@@ -85,16 +88,23 @@ def main():
             os.mkdir(p)
 
     # get input images and copy to working directory
-    rasterList = glob.glob(os.path.join(imDir, '*.tif'))[10:10+N_ims]   
-    for im_tmp in rasterList:
-        shutil.copy(im_tmp, imDir_out)
+    all_images = glob.glob(os.path.join(imDir, '*.tif'))
+    # img_index = np.random.randint(0, len(all_images), size=N_ims)
+    # print(img_index)
+    # print(int(img_index))
+    # rasterList = all_images[img_index]
+
+    rasterList = np.random.choice(all_images, N_ims)
+
+    # for im_tmp in rasterList:
+    #     shutil.copy(im_tmp, imDir_out)
             
     # Create masks and demo images
     pixel_coords_list = []
     for i,rasterSrc in enumerate(rasterList):
 
         input_image = plt.imread(rasterSrc) # cv2.imread(rasterSrc, 1)
-        print i, "rasterSrc:", rasterSrc
+        print(i, "rasterSrc:", rasterSrc)
         
          # get name root
         name_root0 = rasterSrc.split('/')[-1].split('.')[0]
@@ -177,8 +187,8 @@ def main():
 
         
     # explore pixel_coords_list
-    print "\nExplore pixel coords list..."
-    print "pixel_coords_list[2][0]:", pixel_coords_list[2][0]
+    # print("\nExplore pixel coords list...")
+    # print("pixel_coords_list[2][0]:", pixel_coords_list[2][0])
 
 ###############################################################################    
 if __name__ == '__main__':

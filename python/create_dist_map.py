@@ -1,3 +1,4 @@
+from __future__ import print_function
 from osgeo import gdal, ogr, gdalnumeric
 import numpy as np
 import sys
@@ -91,5 +92,5 @@ def create_dist_map(rasterSrc, vectorSrc, npDistFileName='',
         np.save(npDistFileName, proxTotal)
         #cv2.imwrite(npDistFileName, proxTotal)
 
-    #return proxTotal
-    return
+    return proxTotal
+    # return

@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-
+from __future__ import print_function
 from osgeo import gdal, osr
 import numpy as np
 import json
@@ -8,14 +8,13 @@ import sys
 
 ####################
 # download spacenet utilities from:
-#  https://github.com/SpaceNetChallenge/utilities/tree/master/python/spaceNet 
+# https://github.com/SpaceNetChallenge/utilities
 path_to_spacenet_utils = 'spaceNetUtilities/'
 sys.path.extend([path_to_spacenet_utils])
 from spaceNetUtilities import geoTools as gT
 
-###############################################################################    
-def geojson_to_pixel_arr(raster_file, geojson_file, pixel_ints=True,
-                       verbose=False):
+
+def geojson_to_pixel_arr(raster_file, geojson_file, pixel_ints=True, verbose=False):
     '''
     Tranform geojson file into array of points in pixel (and latlon) coords
     pixel_ints = 1 sets pixel coords as integers
@@ -39,13 +38,13 @@ def geojson_to_pixel_arr(raster_file, geojson_file, pixel_ints=True,
         coords_tmp = feature['geometry']['coordinates'][0]
         type_tmp = feature['geometry']['type']
         if verbose: 
-            print "features:", feature.keys()
-            print "geometry:features:", feature['geometry'].keys()
+            print("features:", feature.keys())
+            print("geometry:features:", feature['geometry'].keys())
 
-            #print "feature['geometry']['coordinates'][0]", z
+            # print "feature['geometry']['coordinates'][0]", z
         latlons.append(coords_tmp)
         types.append(type_tmp)
-        #print feature['geometry']['type']
+        # print feature['geometry']['type']
     
     # convert latlons to pixel coords
     pixel_coords = []
@@ -57,7 +56,7 @@ def geojson_to_pixel_arr(raster_file, geojson_file, pixel_ints=True,
             for poly in poly0:
                 poly=np.array(poly)
                 if verbose:
-                    print "poly.shape:", poly.shape
+                    print("poly.shape:", poly.shape)
                     
                 # account for nested arrays
                 if len(poly.shape) == 3 and poly.shape[0] == 1:
@@ -66,17 +65,17 @@ def geojson_to_pixel_arr(raster_file, geojson_file, pixel_ints=True,
                 poly_list_pix = []
                 poly_list_latlon = []
                 if verbose: 
-                    print "poly", poly
+                    print("poly", poly)
                 for coord in poly:
                     if verbose: 
-                        print "coord:", coord
+                        print("coord:", coord)
                     lon, lat, z = coord 
                     px, py = gT.latlon2pixel(lat, lon, input_raster=src_raster,
                                          targetsr=targetsr,
                                              geom_transform=geom_transform)
                     poly_list_pix.append([px, py])
                     if verbose:
-                        print "px, py", px, py
+                        print("px, py", px, py)
                     poly_list_latlon.append([lat, lon])
                 
                 if pixel_ints:
@@ -89,7 +88,7 @@ def geojson_to_pixel_arr(raster_file, geojson_file, pixel_ints=True,
         elif poly_type.upper() == 'POLYGON':
             poly=np.array(poly0)
             if verbose:
-                print "poly.shape:", poly.shape
+                print("poly.shape:", poly.shape)
                 
             # account for nested arrays
             if len(poly.shape) == 3 and poly.shape[0] == 1:
@@ -98,17 +97,17 @@ def geojson_to_pixel_arr(raster_file, geojson_file, pixel_ints=True,
             poly_list_pix = []
             poly_list_latlon = []
             if verbose: 
-                print "poly", poly
+                print("poly", poly)
             for coord in poly:
                 if verbose: 
-                    print "coord:", coord
+                    print("coord:", coord)
                 lon, lat, z = coord 
                 px, py = gT.latlon2pixel(lat, lon, input_raster=src_raster,
                                      targetsr=targetsr,
                                      geom_transform=geom_transform)
                 poly_list_pix.append([px, py])
                 if verbose:
-                    print "px, py", px, py
+                    print("px, py", px, py)
                 poly_list_latlon.append([lat, lon])
             
             if pixel_ints:
@@ -119,7 +118,7 @@ def geojson_to_pixel_arr(raster_file, geojson_file, pixel_ints=True,
             latlon_coords.append(poly_list_latlon)
             
         else:
-            print "Unknown shape type in coords_arr_from_geojson()"
+            print("Unknown shape type in coords_arr_from_geojson()")
             return
             
     return pixel_coords, latlon_coords

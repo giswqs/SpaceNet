@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-
+from __future__ import print_function
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 import matplotlib.pyplot as plt
@@ -41,13 +41,13 @@ def plot_truth_coords(input_image, pixel_coords,
     # truth polygons
     zero_arr = np.zeros(input_image.shape[:2])
     # set background to white?
-    #zero_arr[zero_arr == 0.0] = np.nan
+    # zero_arr[zero_arr == 0.0] = np.nan
     ax1.imshow(zero_arr, cmap=cmap)
     if len(patches) > 0:
         ax1.add_collection(p2)
     ax1.set_title('Ground Truth Building Polygons')
         
-    #plt.axis('off')
+    # plt.axis('off')
     plt.tight_layout()
     if add_title:
         suptitle.set_y(0.95)
